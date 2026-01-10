@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Customer Churn Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --burgundy: #4A1C1C;
+            --rust: #A04040;
+            --coral: #D4664A;
+            --orange: #E8742B;
+            --golden: #F5B530;
+            --cream: #F5D56A;
+            --light-cream: #F9E4B3;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background-image: url('/static/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-card {
+            background: white;
+            border-radius: 24px;
+            padding: 60px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(74,28,28,0.1);
+            border: 1px solid rgba(245, 213, 106, 0.5);
+        }
+        .error-icon {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            color: var(--rust);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+        .error-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--burgundy);
+            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+        }
+        .error-message {
+            font-size: 1.1rem;
+            color: var(--burgundy);
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+        .error-btn {
+            display: inline-block;
+            padding: 14px 30px;
+            background: linear-gradient(135deg, var(--burgundy), var(--rust));
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Playfair Display', serif;
+        }
+        .error-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(74,28,28,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="error-card">
+        <div class="error-icon">Notice</div>
+        <h1 class="error-title">Data Not Available</h1>
+        <p class="error-message">{{ message }}</p>
+        <a href="/" class="error-btn">Try Again</a>
+    </div>
+</body>
+</html>

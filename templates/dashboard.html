@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Churn Prediction Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Source+Sans+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Retro 70s Color Palette */
+        :root {
+            --burgundy: #4A1C1C;
+            --rust: #A04040;
+            --coral: #D4664A;
+            --orange: #E8742B;
+            --golden: #F5B530;
+            --cream: #F5D56A;
+            --light-cream: #F9E4B3;
+            --dark-text: #3D1E1E;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-image: url('/static/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            color: var(--dark-text);
+        }
+
+        h1, h2, h3, .card-title {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--light-cream); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, var(--burgundy) 0%, var(--rust) 100%); border-radius: 4px; }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--burgundy) 0%, var(--rust) 100%);
+            border-radius: 24px;
+            padding: 35px 45px;
+            margin-bottom: 30px;
+            color: var(--light-cream);
+            box-shadow: 0 20px 60px rgba(74, 28, 28, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: rgba(245, 181, 48, 0.08);
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header h1 .title-main {
+            background: linear-gradient(135deg, var(--light-cream) 0%, var(--cream) 50%, var(--golden) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header h1 .title-author {
+            font-size: 1.4rem;
+            font-weight: 500;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--golden) 50%, var(--orange) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-stat {
+            background: rgba(217, 212, 167, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 18px 28px;
+            border-radius: 16px;
+            min-width: 160px;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(217, 212, 167, 0.2);
+        }
+
+        .header-stat:hover {
+            transform: translateY(-3px);
+        }
+
+        .header-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .header-stat-label {
+            font-size: 0.9rem;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 14px;
+            background: white;
+            color: var(--dark-text);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(74, 28, 28, 0.08);
+            text-decoration: none;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(74, 28, 28, 0.15);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--burgundy) 0%, var(--rust) 100%);
+            color: var(--light-cream);
+            box-shadow: 0 8px 25px rgba(74, 28, 28, 0.3);
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+        @media (max-width: 1200px) {
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(74, 28, 28, 0.06);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(74, 28, 28, 0.12);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .stat-card.coral::before { background: linear-gradient(90deg, var(--coral), var(--orange)); }
+        .stat-card.golden::before { background: linear-gradient(90deg, var(--golden), var(--cream)); }
+        .stat-card.sage::before { background: linear-gradient(90deg, var(--rust), var(--coral)); }
+        .stat-card.teal::before { background: linear-gradient(90deg, var(--burgundy), var(--rust)); }
+
+        .stat-card-icon {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-card.coral .stat-card-icon { background: rgba(212, 102, 74, 0.15); color: var(--coral); }
+        .stat-card.golden .stat-card-icon { background: rgba(245, 181, 48, 0.15); color: var(--golden); }
+        .stat-card.sage .stat-card-icon { background: rgba(160, 64, 64, 0.15); color: var(--rust); }
+        .stat-card.teal .stat-card-icon { background: rgba(74, 28, 28, 0.15); color: var(--burgundy); }
+
+        .stat-card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 5px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-card-label {
+            font-size: 0.95rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(45, 74, 74, 0.06);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--dark-text);
+        }
+
+        .card-title-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .card-title-icon.coral { background: rgba(212, 102, 74, 0.15); color: var(--coral); }
+        .card-title-icon.golden { background: rgba(245, 181, 48, 0.15); color: var(--golden); }
+        .card-title-icon.sage { background: rgba(160, 64, 64, 0.15); color: var(--rust); }
+        .card-title-icon.teal { background: rgba(74, 28, 28, 0.15); color: var(--burgundy); }
+
+        .chart-container {
+            height: 350px;
+            position: relative;
+        }
+
+        .chart-container.small { height: 250px; }
+        .chart-container.large { height: 400px; }
+
+        /* Ranking Table */
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ranking-table th {
+            background: linear-gradient(135deg, var(--light-cream), var(--cream));
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--burgundy);
+            border-bottom: 2px solid var(--cream);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .ranking-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--cream);
+        }
+
+        .ranking-table tbody tr:hover {
+            background: var(--light-cream);
+        }
+
+        .rank-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .rank-badge.gold { background: linear-gradient(135deg, var(--golden), var(--cream)); color: var(--burgundy); }
+        .rank-badge.silver { background: linear-gradient(135deg, var(--orange), var(--coral)); color: white; }
+        .rank-badge.bronze { background: linear-gradient(135deg, var(--rust), var(--coral)); color: white; }
+        .rank-badge.normal { background: var(--cream); color: var(--burgundy); }
+
+        .metric-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .metric-badge.high { background: rgba(143, 164, 126, 0.2); color: #5D7A52; }
+        .metric-badge.medium { background: rgba(212, 168, 75, 0.2); color: #B08930; }
+        .metric-badge.low { background: rgba(224, 123, 84, 0.2); color: #C25A35; }
+
+        /* Feature Bars */
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+
+        .feature-name {
+            width: 140px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--burgundy);
+        }
+
+        .feature-bar-bg {
+            flex: 1;
+            height: 12px;
+            background: var(--cream);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .feature-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--burgundy), var(--orange));
+            border-radius: 6px;
+            transition: width 0.8s ease;
+        }
+
+        .feature-value {
+            width: 60px;
+            text-align: right;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--dark-text);
+        }
+
+        /* Segments */
+        .segment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .segment-item {
+            background: linear-gradient(135deg, var(--light-cream), var(--cream));
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(217, 212, 167, 0.5);
+        }
+
+        .segment-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(74, 28, 28, 0.1);
+        }
+
+        .segment-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            color: var(--dark-text);
+            margin-bottom: 12px;
+        }
+
+        .segment-churn {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(135deg, var(--burgundy), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .segment-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--cream);
+            border-top: 4px solid var(--burgundy);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Churn Factors */
+        .factor-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--light-cream);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(217, 212, 167, 0.3);
+        }
+
+        .factor-item:hover {
+            background: var(--cream);
+            transform: translateX(5px);
+        }
+
+        .factor-name {
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .factor-diff {
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        .factor-diff.positive { background: rgba(224, 123, 84, 0.2); color: #C25A35; }
+        .factor-diff.negative { background: rgba(143, 164, 126, 0.2); color: #5D7A52; }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--burgundy);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>
+                <span class="title-main">Customer Churn Prediction</span>
+                <span class="title-author">by Ahmed Bilal Nazim</span>
+            </h1>
+            <p>Machine Learning Analytics Dashboard — Powered by {{ data.model_ranking|length }} ML Models</p>
+            <div class="header-stats">
+                <div class="header-stat">
+                    <div class="header-stat-value">{{ "{:,}".format(data.data_stats.total_rows) }}</div>
+                    <div class="header-stat-label">Total Customers</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value">{{ data.data_stats.churn_rate_train }}%</div>
+                    <div class="header-stat-label">Churn Rate</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value">{{ data.best_model.accuracy }}%</div>
+                    <div class="header-stat-label">Best Accuracy</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value">{{ data.best_model.name }}</div>
+                    <div class="header-stat-label">Best Model</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <button class="nav-btn active" onclick="showTab('overview')">Overview</button>
+            <button class="nav-btn" onclick="showTab('models')">Model Comparison</button>
+            <button class="nav-btn" onclick="showTab('insights')">Insights</button>
+            <a href="/predict" class="nav-btn">Predict Churn</a>
+        </nav>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <!-- Stat Cards -->
+            <div class="grid grid-4">
+                <div class="stat-card coral">
+                    <div class="stat-card-icon">TR</div>
+                    <div class="stat-card-value">{{ "{:,}".format(data.data_stats.training_rows) }}</div>
+                    <div class="stat-card-label">Training Samples</div>
+                </div>
+                <div class="stat-card sage">
+                    <div class="stat-card-icon">TE</div>
+                    <div class="stat-card-value">{{ "{:,}".format(data.data_stats.testing_rows) }}</div>
+                    <div class="stat-card-label">Testing Samples</div>
+                </div>
+                <div class="stat-card teal">
+                    <div class="stat-card-icon">ML</div>
+                    <div class="stat-card-value">{{ data.model_ranking|length }}</div>
+                    <div class="stat-card-label">ML Models Trained</div>
+                </div>
+                <div class="stat-card golden">
+                    <div class="stat-card-icon">FT</div>
+                    <div class="stat-card-value">{{ data.data_stats.features }}</div>
+                    <div class="stat-card-label">Features Used</div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-icon teal">01</span>
+                            Model Accuracy Comparison
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="accuracyChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-icon coral">02</span>
+                            Churn Distribution
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="churnPieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Importance & Age Distribution -->
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-icon sage">03</span>
+                            Feature Importance
+                        </div>
+                    </div>
+                    <div id="featureImportance">
+                        {% for feat in data.feature_importance[:10] %}
+                        <div class="feature-item">
+                            <span class="feature-name">{{ feat.feature }}</span>
+                            <div class="feature-bar-bg">
+                                <div class="feature-bar-fill" style="width: {{ (feat.importance / data.feature_importance[0].importance * 100)|round(1) }}%"></div>
+                            </div>
+                            <span class="feature-value">{{ "%.1f"|format(feat.importance) }}%</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-icon golden">04</span>
+                            Churn by Age Group
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="ageChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Models Tab -->
+        <div id="models" class="tab-content">
+            <div class="card" style="margin-bottom: 25px;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon teal">01</span>
+                        Model Performance Ranking
+                    </div>
+                </div>
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1 Score</th>
+                            <th>ROC AUC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for model in data.model_ranking %}
+                        <tr>
+                            <td>
+                                <div class="rank-badge {% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% else %}normal{% endif %}">
+                                    {{ model.rank }}
+                                </div>
+                            </td>
+                            <td><strong>{{ model.name }}</strong></td>
+                            <td><span class="metric-badge {% if model.accuracy >= 70 %}high{% elif model.accuracy >= 50 %}medium{% else %}low{% endif %}">{{ model.accuracy }}%</span></td>
+                            <td>{{ model.precision }}%</td>
+                            <td>{{ model.recall }}%</td>
+                            <td>{{ model.f1_score }}%</td>
+                            <td><strong>{{ model.roc_auc }}%</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-icon coral">02</span>
+                            Metrics Comparison
+                        </div>
+                    </div>
+                    <div class="chart-container large">
+                        <canvas id="metricsRadar"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-icon sage">03</span>
+                            ROC-AUC Scores
+                        </div>
+                    </div>
+                    <div class="chart-container large">
+                        <canvas id="rocBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights Tab -->
+        <div id="insights" class="tab-content">
+            <!-- Customer Segments -->
+            <div class="card" style="margin-bottom: 25px;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon coral">01</span>
+                        Churn Rate by Subscription Type
+                    </div>
+                </div>
+                <div class="segment-grid">
+                    {% for name, seg in data.customer_segments.by_subscription.items() %}
+                    <div class="segment-item">
+                        <div class="segment-name">{{ name }}</div>
+                        <div class="segment-churn">{{ seg.churn_rate }}%</div>
+                        <div class="segment-label">Churn Rate</div>
+                        <div style="margin-top: 10px; font-size: 0.85rem; color: #64748b;">
+                            {{ "{:,}".format(seg.count) }} customers
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-icon golden">02</span>
+                            Churn by Contract Length
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="contractChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-icon sage">03</span>
+                            Top Churn Risk Factors
+                        </div>
+                    </div>
+                    <div id="churnFactors">
+                        {% for factor in data.churn_factors[:6] %}
+                        <div class="factor-item">
+                            <span class="factor-name">{{ factor.feature }}</span>
+                            <span class="factor-diff {% if factor.difference_pct > 0 %}positive{% else %}negative{% endif %}">
+                                {% if factor.difference_pct > 0 %}+{% endif %}{{ "%.1f"|format(factor.difference_pct) }}%
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon teal">04</span>
+                        Churn by Gender
+                    </div>
+                </div>
+                <div class="segment-grid" style="max-width: 500px;">
+                    {% for name, seg in data.customer_segments.by_gender.items() %}
+                    <div class="segment-item">
+                        <div class="segment-name">{{ name }}</div>
+                        <div class="segment-churn">{{ seg.churn_rate }}%</div>
+                        <div class="segment-label">Churn Rate</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p style="font-family: 'Playfair Display', serif; font-size: 1.1rem;">سب کو سب نہیں ملتا</p>
+            <p style="margin-top: 8px;">Made with love by Ahmed Bilal Nazim</p>
+        </footer>
+    </div>
+
+    <script>
+        // Dashboard Data from Flask
+        const dashboardData = {{ data|tojson|safe }};
+
+        // Tab Navigation
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Chart.js Global Config
+        Chart.defaults.font.family = 'Source Sans Pro, sans-serif';
+        Chart.defaults.plugins.legend.labels.usePointStyle = true;
+
+        // Retro 70s Color Palette
+        const colors = {
+            burgundy: '#4A1C1C',
+            rust: '#A04040',
+            coral: '#D4664A',
+            orange: '#E8742B',
+            golden: '#F5B530',
+            cream: '#F5D56A',
+            lightCream: '#F9E4B3',
+            primary: '#4A1C1C',
+            secondary: '#A04040',
+            success: '#F5B530',
+            warning: '#E8742B',
+            danger: '#A04040',
+            info: '#D4664A',
+            gradient: ['#4A1C1C', '#A04040', '#D4664A', '#E8742B', '#F5B530', '#F5D56A', '#F9E4B3', '#8B3A3A', '#C75B3A', '#E89030', '#F5C860']
+        };
+
+        // 1. Model Accuracy Chart
+        new Chart(document.getElementById('accuracyChart'), {
+            type: 'bar',
+            data: {
+                labels: dashboardData.model_ranking.map(m => m.name.length > 15 ? m.name.substring(0, 15) + '...' : m.name),
+                datasets: [{
+                    label: 'Accuracy %',
+                    data: dashboardData.model_ranking.map(m => m.accuracy),
+                    backgroundColor: colors.gradient.slice(0, dashboardData.model_ranking.length),
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { max: 100, grid: { display: false } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 2. Churn Pie Chart
+        new Chart(document.getElementById('churnPieChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Churned', 'Retained'],
+                datasets: [{
+                    data: [dashboardData.data_stats.churn_rate_train, 100 - dashboardData.data_stats.churn_rate_train],
+                    backgroundColor: [colors.coral, colors.sage],
+                    borderWidth: 0,
+                    cutout: '65%'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // 3. Age Distribution Chart
+        new Chart(document.getElementById('ageChart'), {
+            type: 'bar',
+            data: {
+                labels: dashboardData.age_distribution.map(d => d.Age_Group),
+                datasets: [{
+                    label: 'Churn Rate %',
+                    data: dashboardData.age_distribution.map(d => d.churn_rate),
+                    backgroundColor: colors.teal,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, max: 100 },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 4. Metrics Radar Chart
+        const top5Models = dashboardData.model_ranking.slice(0, 5);
+        new Chart(document.getElementById('metricsRadar'), {
+            type: 'radar',
+            data: {
+                labels: ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'ROC AUC'],
+                datasets: top5Models.map((m, i) => ({
+                    label: m.name,
+                    data: [m.accuracy, m.precision, m.recall, m.f1_score, m.roc_auc],
+                    borderColor: colors.gradient[i],
+                    backgroundColor: colors.gradient[i] + '20',
+                    borderWidth: 2,
+                    pointRadius: 4
+                }))
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { stepSize: 20 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // 5. ROC-AUC Bar Chart
+        new Chart(document.getElementById('rocBarChart'), {
+            type: 'bar',
+            data: {
+                labels: dashboardData.model_ranking.map(m => m.name.length > 12 ? m.name.substring(0, 12) + '...' : m.name),
+                datasets: [{
+                    label: 'ROC-AUC %',
+                    data: dashboardData.model_ranking.map(m => m.roc_auc),
+                    backgroundColor: colors.gradient,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, max: 100 },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 6. Contract Chart
+        const contractData = Object.entries(dashboardData.customer_segments.by_contract);
+        new Chart(document.getElementById('contractChart'), {
+            type: 'bar',
+            data: {
+                labels: contractData.map(([name]) => name),
+                datasets: [{
+                    label: 'Churn Rate %',
+                    data: contractData.map(([, data]) => data.churn_rate),
+                    backgroundColor: [colors.danger, colors.warning, colors.success],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, max: 100 },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
