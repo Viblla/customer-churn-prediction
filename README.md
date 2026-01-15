@@ -17,6 +17,7 @@ A comprehensive Machine Learning project that predicts customer churn using mult
 - **Confusion Matrices**: Detailed prediction analysis
 - **Live Predictions**: Predict churn for new customers
 - **Customer Insights**: Segmentation by subscription, contract, age, gender
+- **Responsive Design**: Works seamlessly across all devices
 
 ## 📁 Project Structure
 
@@ -133,12 +134,12 @@ The dashboard will open at `http://localhost:3000`
 - Real-time churn prediction
 - Risk level classification
 
-## 🎨 Tech Stack
+## 🛠️ Tech Stack
 
 - **ML Pipeline**: Python, Scikit-learn, XGBoost, LightGBM
 - **Backend**: Node.js, Express.js
 - **Frontend**: React, Recharts
-- **Styling**: Custom CSS with gradients and animations
+- **Styling**: Custom CSS
 
 ## 📝 Dataset Features
 

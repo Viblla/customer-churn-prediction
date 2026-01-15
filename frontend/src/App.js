@@ -25,7 +25,7 @@ const Icons = {
   info: ''
 };
 
-// Color palette - Retro 70s Theme
+// Color palette
 const COLORS = {
   primary: '#FF6B35',
   secondary: '#D32F2F',
