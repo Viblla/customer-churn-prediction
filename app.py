@@ -168,28 +168,28 @@ def get_recommendations(customer_data, churn_prob):
     recs = []
     
     if customer_data.get('Support Calls', 0) > 4:
-        recs.append({'icon': '🔧', 'text': 'High support calls - Improve product experience'})
+        recs.append({'icon': '', 'text': 'High support calls - Improve product experience'})
     
     if customer_data.get('Payment Delay', 0) > 15:
-        recs.append({'icon': '💳', 'text': 'Payment delays - Offer flexible payment plans'})
+        recs.append({'icon': '', 'text': 'Payment delays - Offer flexible payment plans'})
     
     if customer_data.get('Tenure', 0) < 6:
-        recs.append({'icon': '🎁', 'text': 'New customer - Provide onboarding incentives'})
+        recs.append({'icon': '', 'text': 'New customer - Provide onboarding incentives'})
     
     if customer_data.get('Usage Frequency', 0) < 5:
-        recs.append({'icon': '📊', 'text': 'Low usage - Send engagement campaigns'})
+        recs.append({'icon': '', 'text': 'Low usage - Send engagement campaigns'})
     
     if customer_data.get('Contract Length') == 'Monthly':
-        recs.append({'icon': '📝', 'text': 'Monthly contract - Offer annual discount'})
+        recs.append({'icon': '', 'text': 'Monthly contract - Offer annual discount'})
     
     if churn_prob >= 70:
-        recs.append({'icon': '🚨', 'text': 'HIGH RISK - Immediate intervention required'})
-        recs.append({'icon': '📞', 'text': 'Schedule personal outreach call'})
+        recs.append({'icon': '', 'text': 'HIGH RISK - Immediate intervention required'})
+        recs.append({'icon': '', 'text': 'Schedule personal outreach call'})
     elif churn_prob >= 40:
-        recs.append({'icon': '⚠️', 'text': 'Medium risk - Proactive engagement recommended'})
+        recs.append({'icon': '', 'text': 'Medium risk - Proactive engagement recommended'})
     
     if not recs:
-        recs.append({'icon': '✅', 'text': 'Customer appears satisfied - Maintain current service'})
+        recs.append({'icon': '', 'text': 'Customer appears satisfied - Maintain current service'})
     
     return recs
 
