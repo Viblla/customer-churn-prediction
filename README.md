@@ -1,5 +1,11 @@
 # Customer Churn Prediction Dashboard
 
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-16+-green.svg)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-18.2-61dafb.svg)](https://react.dev/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)]()
+
 A comprehensive Machine Learning project that predicts customer churn using multiple ML algorithms, with a beautiful Node.js/React dashboard for visualization and real-time predictions.
 
 ## Features
