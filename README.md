@@ -48,6 +48,11 @@ Customer_Churn_Prediction/
 │   │   └── index.css           # Styling
 │   ├── public/
 │   └── package.json
+├── templates/                  # Flask HTML templates
+├── static/                     # Static assets
+├── app.py                      # Flask application (alternative dashboard)
+├── start_servers.ps1           # PowerShell startup script
+├── start-servers.bat           # Batch startup script
 └── README.md
 ```
 
@@ -55,7 +60,7 @@ Customer_Churn_Prediction/
 
 ### Prerequisites
 - Python 3.8+
-- Node.js 16+
+- Node.js 16+ (for React dashboard)
 - npm or yarn
 
 ### Step 1: Install Python Dependencies
@@ -78,7 +83,9 @@ This will:
 - Save models to `ml_model/models/`
 - Save dashboard data to `ml_model/results/dashboard_data.json`
 
-### Step 3: Start Backend Server
+### Option A: Node.js/React Dashboard (Recommended)
+
+**Step 3A: Start Backend Server**
 
 ```bash
 cd backend
@@ -88,7 +95,7 @@ npm start
 
 The API server will run on `http://localhost:5000`
 
-### Step 4: Start Frontend Dashboard
+**Step 4A: Start Frontend Dashboard**
 
 ```bash
 cd frontend
@@ -97,6 +104,25 @@ npm start
 ```
 
 The dashboard will open at `http://localhost:3000`
+
+**Quick Start (PowerShell)**
+```powershell
+.\start_servers.ps1
+```
+
+**Quick Start (Command Prompt)**
+```cmd
+start-servers.bat
+```
+
+### Option B: Flask Dashboard
+
+```bash
+pip install flask flask-cors
+python app.py
+```
+
+The Flask dashboard will run on `http://localhost:5000` with integrated UI at `/dashboard`
 
 ## Screenshots
 
