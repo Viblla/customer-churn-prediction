@@ -2,7 +2,7 @@
 
 A comprehensive Machine Learning project that predicts customer churn using multiple ML algorithms, with a beautiful Node.js/React dashboard for visualization and real-time predictions.
 
-## 🚀 Features
+## Features
 
 ### Machine Learning
 - **9+ ML Algorithms**: Logistic Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost, LightGBM, SVM, KNN, Naive Bayes, Neural Network
@@ -19,7 +19,7 @@ A comprehensive Machine Learning project that predicts customer churn using mult
 - **Customer Insights**: Segmentation by subscription, contract, age, gender
 - **Responsive Design**: Works seamlessly across all devices
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Customer_Churn_Prediction/
@@ -45,7 +45,7 @@ Customer_Churn_Prediction/
 └── README.md
 ```
 
-## 🛠️ Setup Instructions
+## Setup Instructions
 
 ### Prerequisites
 - Python 3.8+
@@ -92,7 +92,7 @@ npm start
 
 The dashboard will open at `http://localhost:3000`
 
-## 📊 API Endpoints
+## API Endpoints
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
@@ -107,7 +107,7 @@ The dashboard will open at `http://localhost:3000`
 | `/api/churn-factors` | GET | Churn risk factors |
 | `/api/predict` | POST | Predict customer churn |
 
-## 📈 Dashboard Features
+## Dashboard Features
 
 ### Overview Tab
 - Dataset statistics cards
@@ -134,14 +134,14 @@ The dashboard will open at `http://localhost:3000`
 - Real-time churn prediction
 - Risk level classification
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **ML Pipeline**: Python, Scikit-learn, XGBoost, LightGBM
 - **Backend**: Node.js, Express.js
 - **Frontend**: React, Recharts
 - **Styling**: Custom CSS
 
-## 📝 Dataset Features
+## Dataset Features
 
 | Feature | Type | Description |
 |---------|------|-------------|
@@ -158,17 +158,13 @@ The dashboard will open at `http://localhost:3000`
 | Last Interaction | Numeric | Days since last interaction |
 | Churn | Target | 0 = Stayed, 1 = Churned |
 
-## 🏆 Model Performance
+## Model Performance
 
 Models are automatically ranked by accuracy. Typical results include:
 - Best models usually achieve 85-90%+ accuracy
 - Feature importance helps identify key churn predictors
 - ROC-AUC scores indicate model discrimination ability
 
-## 📄 License
+## License
 
 This project is for educational purposes.
-
----
-
-Built with ❤️ for GIKI Data Science Project
