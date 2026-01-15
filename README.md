@@ -92,6 +92,28 @@ npm start
 
 The dashboard will open at `http://localhost:3000`
 
+## Screenshots
+
+### Dashboard Overview
+The main dashboard displays key metrics and visualizations for churn analysis.
+
+![Dashboard Header](screenshots/dashboard-header.png)
+
+### Analytics Dashboard
+Overview tab with comprehensive visualizations including model accuracy comparison, churn distribution, feature importance, and age-based churn analysis.
+
+![Analytics Dashboard](screenshots/analytics-dashboard.png)
+
+### Model Performance Ranking
+Detailed ranking of all 11 ML models with accuracy, precision, recall, F1-score, and ROC-AUC metrics.
+
+![Model Performance](screenshots/model-performance.png)
+
+### Customer Insights
+Segmentation analysis showing churn patterns by subscription type, contract length, and risk factors.
+
+![Customer Insights](screenshots/customer-insights.png)
+
 ## API Endpoints
 
 | Endpoint | Method | Description |
