@@ -6,33 +6,34 @@ import {
   PolarRadiusAxis, Radar, AreaChart, Area
 } from 'recharts';
 
-// Icons
+// Icons (removed emojis)
 const Icons = {
-  dashboard: '📊',
-  models: '🤖',
-  predict: '🔮',
-  insights: '💡',
-  users: '👥',
-  chart: '📈',
-  warning: '⚠️',
-  check: '✅',
-  close: '❌',
-  trophy: '🏆',
-  target: '🎯',
-  brain: '🧠',
-  lightning: '⚡',
-  fire: '🔥'
+  dashboard: '',
+  models: '',
+  predict: '',
+  insights: '',
+  users: '',
+  chart: '',
+  warning: '',
+  check: '',
+  close: '',
+  trophy: '',
+  target: '',
+  brain: '',
+  lightning: '',
+  fire: '',
+  info: ''
 };
 
-// Color palette
+// Color palette - Retro 70s Theme
 const COLORS = {
-  primary: '#667eea',
-  secondary: '#764ba2',
-  success: '#48bb78',
-  warning: '#ed8936',
-  danger: '#f56565',
-  info: '#4299e1',
-  chart: ['#667eea', '#764ba2', '#48bb78', '#ed8936', '#f56565', '#4299e1', '#9f7aea', '#38b2ac', '#fc8181', '#f6ad55']
+  primary: '#FF6B35',
+  secondary: '#D32F2F',
+  success: '#FFA500',
+  warning: '#FFD700',
+  danger: '#8B0000',
+  info: '#FF8C00',
+  chart: ['#FF6B35', '#FFD700', '#FFA500', '#D32F2F', '#8B0000', '#FF8C00', '#C41E3A', '#E67E22', '#F39C12', '#FFFACD']
 };
 
 const API_BASE = 'http://localhost:5000/api';
@@ -183,6 +184,7 @@ function App() {
       {/* Header */}
       <header className="header">
         <h1>{Icons.dashboard} Customer Churn Prediction</h1>
+        <p className="header-subtitle">by Ahmed Bilal Nazim</p>
         <p>Machine Learning Analytics Dashboard - Powered by {model_ranking.length} ML Models</p>
         <div className="header-stats">
           <div className="header-stat">
@@ -218,6 +220,9 @@ function App() {
         <button className={`nav-tab ${activeTab === 'predict' ? 'active' : ''}`} onClick={() => setActiveTab('predict')}>
           {Icons.predict} Predict Churn
         </button>
+        <button className={`nav-tab ${activeTab === 'summary' ? 'active' : ''}`} onClick={() => setActiveTab('summary')}>
+          {Icons.info} Summary
+        </button>
       </nav>
 
       {/* Overview Tab */}
@@ -226,22 +231,18 @@ function App() {
           {/* Stat Cards */}
           <div className="stat-cards">
             <div className="stat-card purple">
-              <div className="stat-card-icon">{Icons.users}</div>
               <div className="stat-card-value">{data_stats.training_rows.toLocaleString()}</div>
               <div className="stat-card-label">Training Samples</div>
             </div>
             <div className="stat-card green">
-              <div className="stat-card-icon">{Icons.target}</div>
               <div className="stat-card-value">{data_stats.testing_rows.toLocaleString()}</div>
               <div className="stat-card-label">Testing Samples</div>
             </div>
             <div className="stat-card blue">
-              <div className="stat-card-icon">{Icons.brain}</div>
               <div className="stat-card-value">{model_ranking.length}</div>
               <div className="stat-card-label">ML Models Trained</div>
             </div>
             <div className="stat-card orange">
-              <div className="stat-card-icon">{Icons.lightning}</div>
               <div className="stat-card-value">{data_stats.features}</div>
               <div className="stat-card-label">Features Used</div>
             </div>
@@ -252,7 +253,6 @@ function App() {
             <div className="card">
               <div className="card-header">
                 <div className="card-title">
-                  <span className="card-title-icon purple">{Icons.trophy}</span>
                   Model Accuracy Comparison
                 </div>
               </div>
@@ -282,7 +282,6 @@ function App() {
             <div className="card">
               <div className="card-header">
                 <div className="card-title">
-                  <span className="card-title-icon orange">{Icons.chart}</span>
                   Churn Distribution
                 </div>
               </div>
@@ -316,7 +315,6 @@ function App() {
             <div className="card">
               <div className="card-header">
                 <div className="card-title">
-                  <span className="card-title-icon green">{Icons.fire}</span>
                   Feature Importance (Top 10)
                 </div>
               </div>
@@ -340,7 +338,6 @@ function App() {
             <div className="card">
               <div className="card-header">
                 <div className="card-title">
-                  <span className="card-title-icon blue">{Icons.users}</span>
                   Churn by Age Group
                 </div>
               </div>
@@ -363,6 +360,29 @@ function App() {
               </div>
             </div>
           </div>
+
+          <div className="card">
+            <div className="card-header">
+              <div className="card-title">Overview Tab</div>
+            </div>
+            <div style={{ padding: '20px', lineHeight: '1.7', fontSize: '0.95rem', color: '#2d3748' }}>
+              <p style={{ marginBottom: '12px' }}>
+                <strong>Purpose:</strong> Provides a high-level snapshot of model performance and customer data distribution.
+              </p>
+              <p style={{ marginBottom: '12px' }}>
+                <strong>Key Sections:</strong>
+              </p>
+              <ul style={{ marginLeft: '20px', marginBottom: '12px' }}>
+                <li>Model Accuracy Comparison - Shows accuracy scores of top models</li>
+                <li>Churn Distribution - Visualizes the ratio of churned vs. retained customers</li>
+                <li>Feature Importance - Highlights which customer attributes most influence churn</li>
+                <li>Age Group Analysis - Reveals churn patterns across different customer age segments</li>
+              </ul>
+              <p>
+                <strong>Use Case:</strong> Start here to understand the overall health of your customer base and which factors drive churn most significantly.
+              </p>
+            </div>
+          </div>
         </>
       )}
 
@@ -373,7 +393,6 @@ function App() {
           <div className="card" style={{ marginBottom: '25px' }}>
             <div className="card-header">
               <div className="card-title">
-                <span className="card-title-icon purple">{Icons.trophy}</span>
                 Model Performance Ranking
               </div>
             </div>
@@ -414,7 +433,6 @@ function App() {
             <div className="card">
               <div className="card-header">
                 <div className="card-title">
-                  <span className="card-title-icon blue">{Icons.chart}</span>
                   Multi-Metric Comparison
                 </div>
               </div>
@@ -439,7 +457,6 @@ function App() {
             <div className="card">
               <div className="card-header">
                 <div className="card-title">
-                  <span className="card-title-icon green">{Icons.target}</span>
                   ROC Curves (Top 5 Models)
                 </div>
               </div>
@@ -507,6 +524,29 @@ function App() {
               </div>
             ))}
           </div>
+
+          <div className="card">
+            <div className="card-header">
+              <div className="card-title">Model Comparison Tab</div>
+            </div>
+            <div style={{ padding: '20px', lineHeight: '1.7', fontSize: '0.95rem', color: '#2d3748' }}>
+              <p style={{ marginBottom: '12px' }}>
+                <strong>Purpose:</strong> Deep dive into individual ML model performance metrics and comparative analysis.
+              </p>
+              <p style={{ marginBottom: '12px' }}>
+                <strong>Key Sections:</strong>
+              </p>
+              <ul style={{ marginLeft: '20px', marginBottom: '12px' }}>
+                <li>Model Performance Ranking - Ranked list of all 11 models by accuracy and other metrics</li>
+                <li>Multi-Metric Comparison - Compare accuracy, precision, recall, and F1 scores</li>
+                <li>ROC Curves - Visualize trade-offs between true positive and false positive rates</li>
+                <li>Confusion Matrices - See TP, TN, FP, FN counts for top models</li>
+              </ul>
+              <p>
+                <strong>Use Case:</strong> Choose the best model for your predictions or understand trade-offs between different algorithms.
+              </p>
+            </div>
+          </div>
         </>
       )}
 
@@ -518,7 +558,6 @@ function App() {
             <div className="card">
               <div className="card-header">
                 <div className="card-title">
-                  <span className="card-title-icon purple">{Icons.chart}</span>
                   Churn by Subscription Type
                 </div>
               </div>
@@ -551,7 +590,6 @@ function App() {
             <div className="card">
               <div className="card-header">
                 <div className="card-title">
-                  <span className="card-title-icon green">{Icons.chart}</span>
                   Churn by Contract Length
                 </div>
               </div>
@@ -585,7 +623,6 @@ function App() {
           <div className="card">
             <div className="card-header">
               <div className="card-title">
-                <span className="card-title-icon orange">{Icons.warning}</span>
                 Churn Risk Factors Analysis
               </div>
             </div>
@@ -625,7 +662,6 @@ function App() {
           <div className="card">
             <div className="card-header">
               <div className="card-title">
-                <span className="card-title-icon blue">{Icons.users}</span>
                 Churn by Gender
               </div>
             </div>
@@ -642,6 +678,29 @@ function App() {
               ))}
             </div>
           </div>
+
+          <div className="card">
+            <div className="card-header">
+              <div className="card-title">Insights Tab</div>
+            </div>
+            <div style={{ padding: '20px', lineHeight: '1.7', fontSize: '0.95rem', color: '#2d3748' }}>
+              <p style={{ marginBottom: '12px' }}>
+                <strong>Purpose:</strong> Extract business intelligence from customer segments and risk factors.
+              </p>
+              <p style={{ marginBottom: '12px' }}>
+                <strong>Key Sections:</strong>
+              </p>
+              <ul style={{ marginLeft: '20px', marginBottom: '12px' }}>
+                <li>Churn by Subscription Type - Identifies which subscription plans have highest churn</li>
+                <li>Churn by Contract Length - Shows how contract terms affect customer retention</li>
+                <li>Risk Factors Analysis - Lists factors where churned customers differ most from retained customers</li>
+                <li>Churn by Gender - Demographic breakdown of churn patterns</li>
+              </ul>
+              <p>
+                <strong>Use Case:</strong> Develop targeted retention strategies for high-risk customer segments.
+              </p>
+            </div>
+          </div>
         </>
       )}
 
@@ -651,7 +710,6 @@ function App() {
           <div className="card">
             <div className="card-header">
               <div className="card-title">
-                <span className="card-title-icon purple">{Icons.predict}</span>
                 Predict Customer Churn
               </div>
             </div>
@@ -728,7 +786,6 @@ function App() {
           <div className="card">
             <div className="card-header">
               <div className="card-title">
-                <span className="card-title-icon green">{Icons.target}</span>
                 Prediction Result
               </div>
             </div>
@@ -761,13 +818,77 @@ function App() {
               </div>
             )}
           </div>
+
+          <div className="card">
+            <div className="card-header">
+              <div className="card-title">Predict Churn Tab</div>
+            </div>
+            <div style={{ padding: '20px', lineHeight: '1.7', fontSize: '0.95rem', color: '#2d3748' }}>
+              <p style={{ marginBottom: '12px' }}>
+                <strong>Purpose:</strong> Make real-time predictions for individual customers using trained ML models.
+              </p>
+              <p style={{ marginBottom: '12px' }}>
+                <strong>Key Features:</strong>
+              </p>
+              <ul style={{ marginLeft: '20px', marginBottom: '12px' }}>
+                <li>Model Selection - Choose from 11 trained models with different algorithms</li>
+                <li>Customer Input Form - Enter customer details (age, tenure, spend, etc.)</li>
+                <li>Churn Prediction - Get binary prediction: likely to churn or retain</li>
+                <li>Confidence Score - Understand the confidence level of the prediction</li>
+              </ul>
+              <p>
+                <strong>Use Case:</strong> Identify at-risk customers in real-time and proactively intervene with retention strategies.
+              </p>
+            </div>
+          </div>
         </div>
+      )}
+
+      {/* Summary Tab */}
+      {activeTab === 'summary' && (
+        <>
+          <div className="card" style={{ marginBottom: '25px' }}>
+            <div className="card-header">
+              <div className="card-title">Dashboard Purpose & Overview</div>
+            </div>
+            <div style={{ padding: '20px', lineHeight: '1.8', fontSize: '1rem', color: '#2d3748' }}>
+              <p style={{ marginBottom: '15px' }}>
+                The <strong>Customer Churn Prediction Dashboard</strong> is a comprehensive Machine Learning analytics platform designed to help businesses understand and predict customer attrition. Using advanced ML algorithms trained on historical customer data, this dashboard provides actionable insights to reduce churn rates and improve customer retention.
+              </p>
+              <p style={{ marginBottom: '15px' }}>
+                <strong>Key Statistics:</strong> Analyzing {data_stats.total_rows.toLocaleString()} customer records with {data_stats.features} key features across {model_ranking.length} different machine learning models. The training set contains {data_stats.training_rows.toLocaleString()} samples with a {data_stats.churn_rate_train}% churn rate, and the testing set validates predictions on {data_stats.testing_rows.toLocaleString()} previously unseen customers.
+              </p>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-header">
+              <div className="card-title">How to Interpret Results</div>
+            </div>
+            <div style={{ padding: '20px', lineHeight: '1.7', fontSize: '0.95rem', color: '#2d3748' }}>
+              <p style={{ marginBottom: '15px' }}>
+                <strong>Accuracy:</strong> Percentage of correct predictions across all customers. Higher is better.
+              </p>
+              <p style={{ marginBottom: '15px' }}>
+                <strong>Precision:</strong> Of customers we predicted would churn, what % actually did? (How trustworthy are churn alerts?)
+              </p>
+              <p style={{ marginBottom: '15px' }}>
+                <strong>Recall:</strong> Of customers who actually churned, what % did we identify? (How many at-risk customers do we catch?)
+              </p>
+              <p style={{ marginBottom: '15px' }}>
+                <strong>F1 Score:</strong> Balanced measure combining precision and recall. Best for imbalanced datasets.
+              </p>
+              <p>
+                <strong>ROC AUC:</strong> Measures model's ability to distinguish between churn and no-churn across all threshold levels. Ranges from 0.5 (random) to 1.0 (perfect).
+              </p>
+            </div>
+          </div>
+        </>
       )}
 
       {/* Footer */}
       <footer className="footer">
-        <p>Customer Churn Prediction Dashboard | Built with React, Node.js & Machine Learning</p>
-        <p>Data: {data_stats.total_rows.toLocaleString()} customers | Models: {model_ranking.length} | Generated: {new Date(dashboardData.generated_at).toLocaleString()}</p>
+        <div className="footer-author">Made with love by Ahmed Bilal Nazim</div>
       </footer>
     </div>
   );

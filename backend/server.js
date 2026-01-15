@@ -267,7 +267,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Start server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`
 ╔════════════════════════════════════════════════════════════╗
 ║     Customer Churn Prediction API Server                   ║
@@ -286,4 +286,19 @@ app.listen(PORT, () => {
 ║    POST /api/predict           - Predict customer churn    ║
 ╚════════════════════════════════════════════════════════════╝
     `);
+});
+
+// Error handling
+server.on('error', (err) => {
+    console.error('Server error:', err);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    process.exit(1);
 });
